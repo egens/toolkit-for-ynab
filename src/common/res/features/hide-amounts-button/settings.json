@@ -1,0 +1,13 @@
+{
+         "name": "hide-amounts-button",
+         "type": "checkbox",
+      "default": false,
+      "section": "general",
+        "title": "Add a Hide Amounts Button",
+  "description": "",
+      "actions": {
+                    "true": [
+                      "injectScript", "main.js"
+                    ]
+                 }
+}
