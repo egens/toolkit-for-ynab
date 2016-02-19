@@ -27,10 +27,10 @@
           var accountId, transactions;
           accountId = 'null';
           if (currentPath.indexOf('/accounts/') > -1) {
-              accountId = currentPath.substr(currentPath.lastIndexOf('/') + 1)
+              accountId = currentPath.substr(currentPath.lastIndexOf('/') + 1);
           }
           transactions = ynabToolKit.shared.getVisibleTransactions(accountId);
-          notSubTransactions = transactions.filter(function(el) { return el.displayItemType != ynab.constants.TransactionDisplayItemType.ScheduledSubTransaction && el.displayItemType != ynab.constants.TransactionDisplayItemType.SubTransaction });
+          notSubTransactions = transactions.filter(function(el) { return el.displayItemType != ynab.constants.TransactionDisplayItemType.ScheduledSubTransaction && el.displayItemType != ynab.constants.TransactionDisplayItemType.SubTransaction; });
           for (var i = 0; i < notSubTransactions.length; i++) {
               if (notSubTransactions[i].isChecked) {
                   inflows += notSubTransactions[i].inflow;
@@ -49,7 +49,7 @@
 
       function enhancedSelectedTotalsUpdate(total) {
           var parent = document.getElementById('accounts-selected-total');
-          if (parent == null) {
+          if (parent === null) {
               return false;
           }
           if ((' ' + parent.className + ' ').indexOf(' hidden ') == -1 && total === false) {
@@ -92,15 +92,15 @@
 
       function enhancedSelectedTotalsPoll() {
           var parentDiv = document.getElementsByClassName('accounts-header-balances');
-          if (parentDiv.length == 0) {
+          if (parentDiv.length === 0) {
               setTimeout(enhancedSelectedTotalsInit, 250);
               return true;
           }
           var accountId, transactions;
-          var checkedTransactions = new Array();
+          var checkedTransactions = [];
           var windowPath = window.location.pathname;
           var newDataSetParent = document.getElementsByClassName('ynab-grid-body')[0].getElementsByClassName('ynab-grid-body-row');
-          var newDataSet = new Array();
+          var newDataSet = [];
           for (var i = 0; i < newDataSetParent.length; i++) {
               newDataSet.push(newDataSetParent[i].id);
           }
@@ -111,17 +111,17 @@
               enhancedSelectedTotalsUpdate(-1);
           }
           if (currentPath.indexOf('/accounts/') > -1) {
-              accountId = currentPath.substr(currentPath.lastIndexOf('/') + 1)
+              accountId = currentPath.substr(currentPath.lastIndexOf('/') + 1);
               transactions = ynab.YNABSharedLib.getBudgetViewModel_AllAccountTransactionsViewModel()._result.transactionDisplayItemsCollection.findItemsByAccountId(accountId);
           } else {
               transactions = ynab.YNABSharedLib.getBudgetViewModel_AllAccountTransactionsViewModel()._result.visibleTransactionDisplayItems;
           }
-          for (var i = 0; i < transactions.length; i++) {
+          for (i = 0; i < transactions.length; i++) {
               if (transactions[i].isChecked) {
                   checkedTransactions.push(transactions[i].entityId);
               }
           }
-          if (checkedTransactions.length == 0) {
+          if (checkedTransactions.length === 0) {
               enhancedSelectedTotalsUpdate(false);
               previousSet = checkedTransactions;
           } else {
@@ -135,7 +135,7 @@
       }
       var currentPath = window.location.pathname;
       var previousSet = '';
-      var dataSet = new Array();
+      var dataSet = [];
       setTimeout(enhancedSelectedTotalsInit, 250);
 
     };
