@@ -15,9 +15,9 @@
 		TransactionAmountTypes = {
 			INFLOW: 0,
 			OUTFLOW: 1
-		}
+		};
 
-		function get_jump_transaction(entry_date, amount) {
+		get_jump_transaction = function(entry_date, amount) {
 			if (DEBUG) {
 				console.log('Entering get_jump_transaction()...');
 				console.log('var dump: entry_date');
@@ -27,15 +27,15 @@
 			}
 
 			var transaction = null;
-			if (amount['type'] === TransactionAmountTypes.INFLOW) {
+			if (amount.type === TransactionAmountTypes.INFLOW) {
 				transaction = $('div.ynab-grid-body-row').
 					has("div.ynab-grid-cell-date:contains('" + entry_date + "')").
-					has("div.ynab-grid-cell-outflow:contains('" + amount['amount'] + "')")
+					has("div.ynab-grid-cell-outflow:contains('" + amount.amount + "')");
 			}
 			else {
 				transaction = $('div.ynab-grid-body-row').
 					has("div.ynab-grid-cell-date:contains('" + entry_date + "')").
-					has("div.ynab-grid-cell-inflow:contains('" + amount['amount'] + "')")
+					has("div.ynab-grid-cell-inflow:contains('" + amount.amount + "')");
 			}
 
 			if (DEBUG) {
@@ -45,9 +45,9 @@
 			}
 
 			return transaction;
-		}
+		};
 
-		function get_transaction_data(clicked_jump_element) {
+		get_transaction_data = function(clicked_jump_element) {
 			if (DEBUG) {
 				console.log('Entering get_jump_transaction()...');
 				console.log('var dump: clicked_jump_element');
@@ -75,7 +75,7 @@
 			}
 
 			return transaction;
-		}
+		};
 
 		$('.transfer-jump').off().on('click', function(){
 			if (DEBUG) {
@@ -85,13 +85,13 @@
 			var entry = get_transaction_data($(this));
 
 			var transaction_amount = {};
-			if (entry['inflow_amount'] !== '$0.00') {
-				transaction_amount['amount'] = entry['inflow_amount'];
-				transaction_amount['type'] = TransactionAmountTypes.INFLOW;
+			if (entry.inflow_amount !== '$0.00') {
+				transaction_amount.amount = entry.inflow_amount;
+				transaction_amount.type = TransactionAmountTypes.INFLOW;
 			}
 			else {
-				transaction_amount['amount'] = entry['outflow_amount'];
-				transaction_amount['type'] = TransactionAmountTypes.OUTFLOW;
+				transaction_amount.amount = entry.outflow_amount;
+				transaction_amount.type = TransactionAmountTypes.OUTFLOW;
 			}
 
 			if (DEBUG) {
@@ -101,10 +101,10 @@
 
 			// Simulate a click on the target account (i.e., the "other side")
 			// of the transfer:
-			$('div#' + entry['account_selector_id']).trigger('click');
+			$('div#' + entry.account_selector_id).trigger('click');
 
 			setTimeout(function() {
-				var jump_transaction = get_jump_transaction(entry['date'], transaction_amount);
+				var jump_transaction = get_jump_transaction(entry.date, transaction_amount);
 				if (jump_transaction) {
 					var grid = jump_transaction.parent();
 					grid.scrollTop(jump_transaction.offset().top);
@@ -129,5 +129,4 @@
 	}
 
 	setTimeout(ynab_transfer_jump, 10);
-})()
-
+})();
