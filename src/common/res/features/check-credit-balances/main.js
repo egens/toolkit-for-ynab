@@ -1,3 +1,4 @@
+/* jshint multistr: true */
 
 (function poll() {
   if (typeof ynabToolKit !== 'undefined' && ynabToolKit.actOnChangeInit === true) {
