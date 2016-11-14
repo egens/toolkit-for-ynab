@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Prepare and download l10ns."""
-import urllib, urllib2
+import urllib
+import urllib2
 import shutil
 import os
 import zipfile
@@ -13,7 +14,8 @@ if len(sys.argv) != 2:
     print 'ERROR:'
     print ''
     print 'Please supply a Crowdin API key, obtained on this page:'
-    print 'http://translate.toolkitforynab.com/project/toolkit-for-ynab/settings#api\n'
+    print 'http://translate.toolkitforynab.com/project/' +
+    'toolkit-for-ynab/settings#api\n'
     print 'Example: ./get_l10ns <api key>'
     print ''
     exit(1)
@@ -23,7 +25,12 @@ KEY = sys.argv[1:][0]
 API_PREFIX = 'https://api.crowdin.com/api/project/%s/' % ID
 KEY_SUFFIX = '?key=%s' % KEY
 FILENAME = 'all.zip'
-DEST_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'locales')
+DEST_DIR = fullpath('locales')
+
+
+def fullpath(filename):
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
+
 
 def export_l10ns():
     """Force crowding to export l10ns."""
@@ -32,13 +39,15 @@ def export_l10ns():
     html = response.read()
     return (html.find('success status') >= 0)
 
+
 def donwload_l10ns():
     """Download all l10ns in zip archive."""
     url = API_PREFIX + 'download/' + FILENAME + KEY_SUFFIX
     l10ns_file = urllib2.urlopen(url)
-    with open('all.zip','wb') as f:
+    with open('all.zip', 'wb') as f:
         f.write(l10ns_file.read())
     return True
+
 
 def get_l10ns_stats():
     url = API_PREFIX + "status" + KEY_SUFFIX + "&json=true"
@@ -46,8 +55,10 @@ def get_l10ns_stats():
     j = response.read()
     lang_completed = {}
     for i in json.loads(j):
-        lang_completed[i['name']] = int(math.ceil(int(i["words_translated"])/float(i["words"])*100))
+        lang_completed[i['name']] = int(math.ceil(int(i["words_translated"]) /
+                                        float(i["words"])*100))
     return lang_completed
+
 
 def unpack(lang_completed):
     """Unpack l10ns, move to one folder, add js initializer."""
@@ -67,30 +78,32 @@ def unpack(lang_completed):
             shutil.rmtree(os.path.join(root, name))
     os.remove(FILENAME)
 
+
 def create_settings(lang_completed):
     """Generate settings.json file."""
     settings = {
-         "name": "l10n",
-         "type": "select",
-      "default": "0",
-      "section": "general",
-        "title": "Localization of YNAB",
-  "description": "Localization of interface.",
-      "options": [
-                { "name": "Default", "value": "0" }
+        "name":     "l10n",
+        "type":     "select",
+        "default":  "0",
+        "section":  "general",
+        "title":    "Localization of YNAB",
+        "description": "Localization of interface.",
+        "options": [
+                {"name": "Default", "value": "0"}
              ],
-      "actions": {}}
+        "actions": {}}
     for root, dirs, files in os.walk(DEST_DIR):
         for name in files:
-            if lang_completed[name.split('.')[0]] != 0:
-                value = name.split('.')[0].lower()
-                percent = ' (%s%%)' % str(int(lang_completed[name.split('.')[0]]))
+            firstname = name.split('.')[0]
+            if lang_completed[firstname] != 0:
+                value = firstname.lower()
+                percent = ' (%s%%)' % str(int(lang_completed[firstname]))
                 settings['options'].append({
-                    "name": name.split('.')[0] + percent,
-                    "value": value })
-                settings['actions'][value] = ["injectScript", "locales/" + name,
+                    "name": firstname + percent,
+                    "value": value})
+                settings['actions'][value] = ["injectScript", "locales/"+name,
                                               "injectScript", "main.js"]
-    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'settings.json'), 'w') as f:
+    with open(fullpath('settings.json'), 'w') as f:
         json.dump(settings, f, indent=4)
 
 lang_completed = get_l10ns_stats()
