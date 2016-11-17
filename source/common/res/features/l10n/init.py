@@ -14,11 +14,15 @@ if len(sys.argv) != 2:
     print 'ERROR:'
     print ''
     print 'Please supply a Crowdin API key, obtained on this page:'
-    print 'http://translate.toolkitforynab.com/project/' +
-    'toolkit-for-ynab/settings#api\n'
+    print 'http://translate.toolkitforynab.com/project/' + \
+          'toolkit-for-ynab/settings#api\n'
     print 'Example: ./get_l10ns <api key>'
     print ''
     exit(1)
+
+
+def fullpath(filename):
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
 
 ID = 'toolkit-for-ynab'
 KEY = sys.argv[1:][0]
@@ -26,10 +30,6 @@ API_PREFIX = 'https://api.crowdin.com/api/project/%s/' % ID
 KEY_SUFFIX = '?key=%s' % KEY
 FILENAME = 'all.zip'
 DEST_DIR = fullpath('locales')
-
-
-def fullpath(filename):
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
 
 
 def export_l10ns():
@@ -57,6 +57,7 @@ def get_l10ns_stats():
     for i in json.loads(j):
         lang_completed[i['name']] = int(math.ceil(int(i["words_translated"]) /
                                         float(i["words"])*100))
+    lang_completed['English'] = 100
     return lang_completed
 
 
@@ -64,18 +65,20 @@ def unpack(lang_completed):
     """Unpack l10ns, move to one folder, add js initializer."""
     os.path.isdir(DEST_DIR) and shutil.rmtree(DEST_DIR)
     zipfile.ZipFile(FILENAME).extractall(DEST_DIR)
+    os.makedirs(fullpath('locales/en/'))
+    shutil.copyfile(fullpath('en.json'), fullpath('locales/en/English.json'))
     for root, dirs, files in os.walk(DEST_DIR):
-        for name in files:
-            if lang_completed[name.split('.')[0]] != 0:
-                shutil.move(os.path.join(root, name), DEST_DIR)
+        for filename in files:
+            if lang_completed[filename.split('.')[0]] != 0:
+                shutil.move(os.path.join(root, filename), DEST_DIR)
                 # Prepend all JSONs with Ember declaration.
-                with open(os.path.join(DEST_DIR, name), 'r+') as f:
+                with open(os.path.join(DEST_DIR, filename), 'r+') as f:
                     content = f.read()
                     f.seek(0, 0)
                     f.write('ynabToolKit.l10nData = ' + content)
     for root, dirs, files in os.walk(DEST_DIR):
-        for name in dirs:
-            shutil.rmtree(os.path.join(root, name))
+        for dirname in dirs:
+            shutil.rmtree(os.path.join(root, dirname))
     os.remove(FILENAME)
 
 
@@ -89,7 +92,7 @@ def create_settings(lang_completed):
         "title":    "Localization of YNAB",
         "description": "Localization of interface.",
         "options": [
-                {"name": "Default", "value": "0"}
+                {"name": "Default", "value": "english"}  # Custom name for Eng.
              ],
         "actions": {}}
     for root, dirs, files in os.walk(DEST_DIR):
@@ -98,11 +101,13 @@ def create_settings(lang_completed):
             if lang_completed[firstname] != 0:
                 value = firstname.lower()
                 percent = ' (%s%%)' % str(int(lang_completed[firstname]))
-                settings['options'].append({
-                    "name": firstname + percent,
-                    "value": value})
                 settings['actions'][value] = ["injectScript", "locales/"+name,
                                               "injectScript", "main.js"]
+                # English option is named Default.
+                if firstname != "English":
+                    settings['options'].append({
+                        "name": firstname + percent,
+                        "value": value})
     with open(fullpath('settings.json'), 'w') as f:
         json.dump(settings, f, indent=4)
 
