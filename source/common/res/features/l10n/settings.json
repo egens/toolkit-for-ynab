@@ -7,7 +7,7 @@
     "options": [
         {
             "name": "Default", 
-            "value": "0"
+            "value": "english"
         }, 
         {
             "name": "Arabic (6%)", 
@@ -262,6 +262,12 @@
         "chinese simplified": [
             "injectScript", 
             "locales/Chinese Simplified.json", 
+            "injectScript", 
+            "main.js"
+        ], 
+        "english": [
+            "injectScript", 
+            "locales/English.json", 
             "injectScript", 
             "main.js"
         ], 
