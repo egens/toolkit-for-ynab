@@ -92,7 +92,7 @@
           contentSetter.setArray(
             [
               l10n['budget.fundsFor'].replace('{{currentMonth}}', dateInfo.currentMonthName),
-              l10n['budget.overspentIn'].replace('{{previousMonth}}', dateInfo.previousMonthName),
+              l10n['budget.overspentIn'].replace('{{month}}', dateInfo.previousMonthName),
               l10n['budget.fundedIn'].replace('{{currentMonth}}', dateInfo.currentMonthName)
             ]
           );
