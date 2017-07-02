@@ -26,19 +26,30 @@
           }
         },
 
+        addBudgetVersionIdObserver() {
+          let applicationController = ynabToolKit.shared.containerLookup('controller:application');
+          applicationController.addObserver('budgetVersionId', function () {
+            Ember.run.scheduleOnce('afterRender', this, resetBudgetView);
+          });
+
+          function resetBudgetView() {
+            ynabToolKit.budgetBalanceToZero.budgetView = null;
+          }
+        },
+
         getCategories() {
-          if (ynabToolKit.budgetBalanceToZero === 'undefined') {
-            return [];
+          // After using Budget Quick Switch, budgetView needs to be reset to the new budget. The try catch construct is necessary
+          // because this function can be called several times during the budget switch process.
+          if (ynabToolKit.budgetBalanceToZero.budgetView === null) {
+            try {
+              ynabToolKit.budgetBalanceToZero.budgetView = ynab.YNABSharedLib.getBudgetViewModel_AllBudgetMonthsViewModel()._result;
+            } catch (e) {
+              return;
+            }
           }
 
-          // After using Budget Quick Switch, budgetView needs to be reset to the new budget.
-          if (ynabToolKit.budgetBalanceToZero.budgetView === null) {
-            ynabToolKit.budgetBalanceToZero.budgetView = ynab.YNABSharedLib.
-              getBudgetViewModel_AllBudgetMonthsViewModel()._result;
-          }
           var categories = [];
-          var masterCats = ynabToolKit.budgetBalanceToZero.budgetView
-          .categoriesViewModel.masterCategoriesCollection._internalDataArray;
+          var masterCats = ynabToolKit.budgetBalanceToZero.budgetView.categoriesViewModel.masterCategoriesCollection._internalDataArray;
           var masterCategories = [];
 
           masterCats.forEach(function (c) {
@@ -100,18 +111,16 @@
                                      .match(/.[^\n]*/)[0];
 
             if (accountName === name) {
-              var input = $(this).find('.budget-table-cell-budgeted div.currency-input').click()
+              let input = $(this).find('.budget-table-cell-budgeted div.currency-input').click()
                                  .find('input');
 
-              var oldValue = input.val();
+              let oldValue = input.val();
 
-              // If nothing is budgetted, the input will be empty
-              oldValue = oldValue || 0;
+              oldValue = ynab.unformat(oldValue);
+              difference = ynab.unformat(ynab.convertFromMilliDollars(difference)); // YNAB stores currency values * 1000
+              let newValue = oldValue + difference;
 
-              // YNAB stores currency values * 1000. What's our actual difference?
-              var newValue = (ynab.unformat(oldValue) + difference / 1000);
-
-              $(input).val(newValue);
+              $(input).val(ynab.YNABSharedLib.currencyFormatter.format(ynab.convertToMilliDollars(newValue)));
 
               if (!ynabToolKit.options.warnOnQuickBudget) {
                 // only seems to work if the confirmation doesn't pop up?
@@ -137,6 +146,9 @@
         }
       };
     }()); // Keep feature functions contained within this object
+
+    // Run once to activate our observer()
+    ynabToolKit.budgetBalanceToZero.addBudgetVersionIdObserver();
   } else {
     setTimeout(poll, 250);
   }
