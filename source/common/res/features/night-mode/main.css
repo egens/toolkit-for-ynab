@@ -1,0 +1,98 @@
+ .toolkit-nightMode div .sidebar {
+    background-image: none;
+}
+ .toolkit-nightMode div .sidebar,
+ .toolkit-nightMode .referral-program,
+ .toolkit-nightMode .button-prefs {
+    background: rgb(0, 50, 64);
+    -moz-box-shadow:  inset -4px 0 20px -4px #000;
+    -webkit-box-shadow:  inset -4px 0 20px -4px #000;
+    box-shadow:  inset -4px 0 20px -4px #000;
+}
+ .toolkit-nightMode g text {
+     stroke: #dddddf;
+ }
+
+ .toolkit-nightMode div .content {
+    background: rgb(0, 33, 44);
+}
+
+ .toolkit-nightMode div .content div.scroll-wrap aside {
+    background:  rgb(0, 40, 54);
+    color: #dddddf;
+}
+ .toolkit-nightMode div .content div.scroll-wrap aside h1 {
+    color: #dddddf;
+}
+
+ .toolkit-nightMode div .content div.scroll-wrap * { background: 0; }
+ .toolkit-nightMode div .content div.scroll-wrap div .budget-header-totals-amount,
+.budget-table-row.is-sub-category > .budget-table-cell-available .positive {
+    background: rgb(10, 103, 40);
+}
+
+
+.toolkit-nightMode .budget-table-row.is-sub-category > .budget-table-cell-available .cautious {
+    background: rgb(150, 90, 5);
+}
+.toolkit-nightMode .budget-table-row.is-sub-category > .budget-table-cell-available .zero
+{
+    background: rgb(0, 50, 64);
+}
+
+ .toolkit-nightMode div .content div.scroll-wrap header,
+ .toolkit-nightMode div .content div.scroll-wrap ul.budget-table-header,
+ .toolkit-nightMode div .content div.scroll-wrap ul.is-master-category,
+
+.toolkit-nightMode .budget-table-row.is-sub-category, .ynab-grid-body-row, .ynab-grid-body-row.is-scheduled, .ynab-grid-body-row.is-scheduled:not(.is-checked)  {
+    border-color: rgb(0, 20, 33);
+}
+.toolkit-nightMode .budget-table-row.is-sub-category:hover  {
+    border-color: rgb(0, 115, 135);;
+}
+ .toolkit-nightMode div .content div.scroll-wrap .budget-table-row.is-master-category:hover * {
+    color: rgb(0, 150, 175);
+
+}
+.toolkit-nightMode .budget-table-row.is-master-category  {
+    border-color: rgb(0, 50, 64);
+}
+
+ .toolkit-nightMode div .content div.scroll-wrap div.budget-header-totals-amount-arrow .arrow {
+    border-left-color: rgb(10, 100, 40);
+}
+ .toolkit-nightMode div .content div.scroll-wrap .ynab-grid-header * {
+    border-color: rgb(0, 50, 64);
+}
+ .toolkit-nightMode div .content div.scroll-wrap ul.is-master-category * {
+    color: rgb(0, 110, 135);
+}
+ .toolkit-nightMode div .content div.scroll-wrap ul.is-sub-category *,
+ .toolkit-nightMode div .content div.scroll-wrap div.ynab-grid-body-row.ynab-grid-body-parent,
+ .toolkit-nightMode div .content div.scroll-wrap div.ynab-grid-body-row.ynab-grid-body-parent.is-scheduled.is-checked,
+ .toolkit-nightMode div .content div.scroll-wrap div.ynab-grid-body-row.is-checked.is-editing * {
+    color: #dddddf;
+}
+ .toolkit-nightMode div .content div.scroll-wrap div.ynab-grid-body-row.ynab-grid-body-parent.is-scheduled {
+    color: #456;
+}
+
+
+ .toolkit-nightMode div .content div.scroll-wrap ul.is-master-category {
+    background: rgb(0, 43, 54); color: #fff;
+}
+ .toolkit-nightMode div .content div.scroll-wrap ul:hover .currency-input span   {
+    background: rgb(0, 50, 64);
+}
+
+ .toolkit-nightMode div .content div.scroll-wrap .ynab-grid-actions button {
+    background: rgb(0, 50, 64);
+}
+
+.toolkit-nightMode .modal-account-dropdown .modal-list .button-list {
+    color: #dddddf;
+}
+.toolkit-nightMode .modal {
+    background: rgb(0, 50, 64);
+    color: #dddddf;
+}

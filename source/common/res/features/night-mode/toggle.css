@@ -1,0 +1,15 @@
+.collapsed-buttons {
+	margin-top: 42px;
+}
+
+#toolkit-toggleNight {
+    color: #bee6ef;
+    top: 2px;
+    right: 2px;
+    position: absolute;
+    padding: 10px;
+}
+
+#toolkit-toggleNight.active {
+	color: #fff;
+}
